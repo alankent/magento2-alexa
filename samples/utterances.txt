@@ -1,0 +1,11 @@
+CheckStoreOnline is my store online
+CheckStoreOnline are you online
+CheckStoreOnline status
+CheckStoreOnline current status
+
+CheckStockLevel how many {item} are in stock
+CheckStockLevel how many {color} {item} are in stock
+CheckStockLevel how many {item} do I have
+CheckStockLevel how many {color} {item} do I have
+CheckStockLevel what is the stock level of {item}
+CheckStockLevel what is the stock level of {color} {item}
