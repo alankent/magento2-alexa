@@ -1,90 +1,14 @@
-# Based on: Mage Inferno Docker Compose
-# Version 4.0.0
-# (https://github.com/mageinferno/magento2-docker-compose)
-
-# Setup instructions
-# - Make sure you have a ~/.composer directory with auth.json file with
-#   you Magento Composer repo keys in it (this will be mounted into containers)
-# - Run "docker-compose run -d --rm setup" once to create databases etc.
-# - The following assumes Samba will be used to access file system.
-#   Remove the samba container if you want to share to native file system
-#   instead (which works well with upcoming Docker release on Mac).
-# - Run "docker-compose up -d app" to start up everything (except Samba)
-# - Run "docker-compose up -d samba" to start up Samba if wanted
-
-app:
-  image: mageinferno/magento2-nginx:1.9.14-0
-  links:
-    - phpfpm
-    - db
-  volumes_from:
-    - appdata
+gsd:
+  image: alankent/gsd:0.3
   ports:
-    - 80:80
-
-appdata:
-  image: tianon/true
+    - "80:80"
+    - "3000:3000"
+    - "3001:3001"
+    - "135:135"
+    - "139:139"
+    - "445:445"
+    - "2222:22"
+  environment:
+    - SAMBA_START=1
   volumes:
-    - /srv/www
-    - ~/.composer:/var/www/.composer
-
-samba:
-  #TODO: REPLACE WITH CORRECT IMAGE NAME
-  image: samba
-  volumes_from:
-    - appdata
-  ports:
-    - 135:135
-    - 139:139
-    - 445:445
-  environment:
-    - SAMBA_SHARE=magento2
-    - SAMBA_DESCRIPTION=Magento 2 source code
-    - SAMBA_ROOT_DIR=/srv/www
-    - SAMBA_USER=www-data
-    - SAMBA_GROUP=www-data
-    - SAMBA_PASSWORD=magento2
-
-phpfpm:
-  image: mageinferno/magento2-php:7.0.5-fpm-0
-  links:
-    - db
-  volumes_from:
-    - appdata
-
-db:
-  image: mariadb:10.1.13
-  volumes_from:
-    - dbdata
-  environment:
-    - MYSQL_ROOT_PASSWORD=magento2
-    - MYSQL_DATABASE=magento2
-    - MYSQL_USER=magento2
-    - MYSQL_PASSWORD=magento2
-
-dbdata:
-  image: tianon/true
-  volumes:
-    - /var/lib/mysql
-
-setup:
-  image: mageinferno/magento2-php:7.0.5-fpm-0
-  command: /usr/local/bin/mage-setup
-  links:
-    - db
-  volumes_from:
-    - appdata
-  environment:
-    - M2SETUP_DB_HOST=db
-    - M2SETUP_DB_NAME=magento2
-    - M2SETUP_DB_USER=magento2
-    - M2SETUP_DB_PASSWORD=magento2
-    - M2SETUP_BASE_URL=http://docker.local/
-    - M2SETUP_ADMIN_FIRSTNAME=Admin
-    - M2SETUP_ADMIN_LASTNAME=User
-    - M2SETUP_ADMIN_EMAIL=dummy@gmail.com
-    - M2SETUP_ADMIN_USER=magento2
-    - M2SETUP_ADMIN_PASSWORD=magento2
-    - M2SETUP_VERSION=2.0.4
-    - M2SETUP_USE_SAMPLE_DATA=false
-    - M2SETUP_USE_ARCHIVE=false
+    - ~/.composer:/home/magento/.composer
