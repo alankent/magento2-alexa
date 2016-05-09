@@ -1,8 +1,8 @@
 {
-    "name": "magento/project-community-edition",
+    "name": "alankent/alexa",
     "description": "eCommerce Platform for Growth (Community Edition)",
     "type": "project",
-    "version": "2.0.4",
+    "version": "0.1.0",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "magento/product-community-edition": "2.0.4",
+        "magento/product-community-edition": "2.0.5",
         "composer/composer": "@alpha"
     },
     "require-dev": {

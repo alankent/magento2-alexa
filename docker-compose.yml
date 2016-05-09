@@ -1,4 +1,4 @@
-gsd:
+dev:
   image: alankent/gsd:0.3
   ports:
     - "80:80"
