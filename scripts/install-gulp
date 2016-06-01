@@ -1,12 +1,12 @@
 #!/bin/sh
 
+mkdir /gulp
+cd /gulp
 
 sudo apt-get update
 sudo apt-get install -y unzip
 
 curl -L -o /tmp/frontool.zip https://github.com/SnowdogApps/magento2-frontools/archive/master.zip
-mkdir /gulp
-cd /gulp
 unzip /tmp/frontool.zip
 rm /tmp/frontool.zip
 mv magento2-frontools-master/* .
@@ -14,7 +14,6 @@ mv magento2-frontools-master/* .
 cp /scripts/install-gulp-run-gulp.sh /usr/local/bin/run-gulp.sh
 chmod +rx /usr/local/bin/run-gulp.sh
 
-cd /gulp
 npm install -g gulp
 npm install --save-dev gulp
 npm install jshint gulp-less gulp-concat gulp-uglify gulp-rename gulp-livereload gulp-sourcemaps gulp-util notify-send --save-dev

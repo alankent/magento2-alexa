@@ -27,6 +27,8 @@ chmod +x bin/magento
 
 # Create the database
 echo 'CREATE DATABASE IF NOT EXISTS `magento`;' | mysql -uroot
+
+# Create tables and env.php with local settings.
 bin/magento setup:install --backend-frontname=admin \
         --cleanup-database --db-host=127.0.0.1 \
         --db-name=magento --db-user=root --db-password= \
@@ -34,6 +36,12 @@ bin/magento setup:install --backend-frontname=admin \
         --admin-email=user@example.com \
         --admin-user=admin --admin-password=admin123 --language=en_US \
         --currency=USD --timezone=America/Chicago --use-rewrites=1
+
+# Flip to developer mode (above sets it to 'default').
+sed -i -e "s/'MAGE_MODE' => 'default'/'MAGE_MODE' => 'developer'/" app/etc/env.php
+
+# Clear all the caches for good luck
+rm -rf var/*
 
 # Update bashrc file
 echo 'export PATH=${PATH}:/vagrant/bin' >> ~vagrant/.bashrc
