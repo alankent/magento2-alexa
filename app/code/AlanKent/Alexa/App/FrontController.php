@@ -1,5 +1,5 @@
 <?php
-namespace Akent\Alexa\App;
+namespace AlanKent\Alexa\App;
 
 use Magento\Framework\App\FrontControllerInterface;
 use Magento\Framework\App\RequestInterface;
