@@ -2,4 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Framework\App\FrontControllerInterface" type="AlanKent\Alexa\App\FrontController" />
+    <preference for="AlanKent\Alexa\App\StateManagementInterface" type="AlanKent\Alexa\App\StateManagement" />
+    <preference for="AlanKent\Alexa\App\SessionDataFactoryInterface" type="AlanKent\Alexa\App\SessionDataFactory" />
+    <preference for="AlanKent\Alexa\App\SessionDataInterface" type="AlanKent\Alexa\App\SessionData" />
+    <preference for="AlanKent\Alexa\App\CustomerDataFactoryInterface" type="AlanKent\Alexa\App\CustomerDataFactory" />
+    <preference for="AlanKent\Alexa\App\CustomerDataInterface" type="AlanKent\Alexa\App\CustomerData" />
 </config>
