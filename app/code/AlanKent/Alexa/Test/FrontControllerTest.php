@@ -49,8 +49,8 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Set up common infrastructure used by all the tests.
      */
-    public function setUp() {
-
+    public function setUp()
+    {
         $this->rawContent = new class extends \Magento\Framework\Controller\Result\Raw {
             public function getContents() { return $this->contents; }
             public function getHttpResponseCode() { return $this->httpResponseCode; }
@@ -103,15 +103,16 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the basics - can we construct the front controller?
      */
-    public function testConstructor() {
+    public function testConstructor()
+    {
         $this->assertNotNull($this->frontController);
     }
 
     /**
      * Make sure an invalid URL is rejected.
      */
-    public function testBadUrl() {
-
+    public function testBadUrl()
+    {
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
@@ -127,8 +128,8 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Make sure valid URL with invalid version number is rejected.
      */
-    public function testNotPost() {
-
+    public function testNotPost()
+    {
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
@@ -144,8 +145,8 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * PUT to good URL, but with minimal (malformed) JSON content.
      */
-    public function testEmptyJson() {
-
+    public function testEmptyJson()
+    {
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
@@ -162,8 +163,8 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test a valid launch request.
      */
-    public function testLaunch() {
-
+    public function testLaunch()
+    {
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
@@ -206,7 +207,6 @@ EOF
 
         $this->frontController->dispatch($request);
 
-        var_dump($this->getContents());
         $this->assertEquals(200, $this->getHttpResponseCode());
         $this->assertContains('version', $this->getContents());
         $this->assertContains('"shouldEndSession":false', $this->getContents());
@@ -220,7 +220,8 @@ EOF
      * Helper function to get HTTP response code from either the JSON or raw output, depending
      * on what form of output was generated.
      */
-    private function getHttpResponseCode() {
+    private function getHttpResponseCode()
+    {
         if ($this->jsonContent->getHttpResponseCode() === null) {
             return $this->rawContent->getHttpResponseCode();
         } else {
@@ -232,7 +233,8 @@ EOF
      * Helper function to get HTTP response payload from either the JSON or raw output, depending
      * on what form of output was generated.
      */
-    private function getContents() {
+    private function getContents()
+    {
         if ($this->jsonContent->getHttpResponseCode() === null) {
             return $this->rawContent->getContents();
         } else {

@@ -34,7 +34,8 @@ class SessionData implements SessionDataInterface
      * @param string $sessionId The session ID for this session.
      * @param string $lastTimestamp Timestamp of previous session.
      */
-    public function __construct($sessionId, $lastTimestamp) {
+    public function __construct($sessionId, $lastTimestamp)
+    {
         $this->sessionId = $sessionId;
         $this->lastTimestamp = $lastTimestamp;
         $this->shouldEndSession = false;

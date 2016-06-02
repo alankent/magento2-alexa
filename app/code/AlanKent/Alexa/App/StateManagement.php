@@ -25,7 +25,10 @@ class StateManagement implements StateManagementInterface
      * @param SessionDataFactoryInterface $sessionDataFactory
      * @param CustomerDataFactoryInterface $customerDataFactory
      */
-    public function __construct($sessionDataFactory, $customerDataFactory) {
+    public function __construct(
+        SessionDataFactoryInterface $sessionDataFactory,
+        CustomerDataFactoryInterface $customerDataFactory
+    ) {
         $this->sessionDataFactory = $sessionDataFactory;
         $this->customerDataFactory = $customerDataFactory;
     }

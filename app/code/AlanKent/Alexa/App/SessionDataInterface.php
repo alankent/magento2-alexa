@@ -29,21 +29,6 @@ interface SessionDataInterface
      * or null if there was no previous request or the timestamp was not persisted.
      */
     public function getLastTimestamp();
-//
-//    /**
-//     * Set to true to tell Alexa to end the current session. The application may wish to keep
-//     * the current session going if it wants more information from the user, or it may end
-//     * the session if the current request has been completely satisified.
-//     * @param bool $shouldEnd True/false value to indicate if the session should be ended after
-//     * the current request.
-//     */
-//    public function setShouldEndSession($shouldEnd);
-//
-//    /**
-//     * Returns the current value of the 'should end session' flag.
-//     * @return bool Returns true if the session should be ended.
-//     */
-//    public function getShouldEndSession();
 
     /**
      * Used to insert session attributes from Alexa into the current session data. 

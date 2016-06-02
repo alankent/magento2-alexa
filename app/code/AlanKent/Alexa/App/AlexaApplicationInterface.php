@@ -15,7 +15,7 @@ interface AlexaApplicationInterface
      * expires.
      * @param CustomerDataInterface $customerData Data structure for holding customer data this is
      * persisted between requests.
-     * @return ResponseDataInterface The response to return to the Alex (to be vocalized).
+     * @return ResponseData The response to return to the Alex (to be vocalized).
      */
     public function launchRequest($sessionData, $customerData);
 
@@ -33,7 +33,7 @@ interface AlexaApplicationInterface
      * @param array $slots An associative array of slot name/value pairs. Note that Alexa
      * may still send a request with omitted slot data if it was not specified in the request,
      * so the caller should check whether expected slot values have been provided or not.
-     * @return ResponseDataInterface The response to return to the Alex (to be vocalized).
+     * @return ResponseData The response to return to the Alex (to be vocalized).
      */
     public function intentRequest($sessionData, $customerData, $intentName, $slots);
 
@@ -48,7 +48,7 @@ interface AlexaApplicationInterface
      * "ERROR": An error occurred that caused the session to end.
      * "EXCEEDED_MAX_REPROMPTS": The user either did not respond or responded with an utterance
      * that did not match any of the intents defined in your voice interface.
-     * @return ResponseDataInterface The response to return to the Alex (to be vocalized).
+     * @return ResponseData The response to return to the Alex (to be vocalized).
      */
     public function endSession($sessionData, $customerData, $reason);
 }

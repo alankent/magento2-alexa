@@ -102,8 +102,8 @@ class FrontController implements FrontControllerInterface
      * @return array Associative array to encode as JSON.
      * @throws \Exception Thrown if fail to parse message.
      */
-    private function processV1AlexaRequest($alexaRequest) {
-
+    private function processV1AlexaRequest($alexaRequest)
+    {
         // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
 
         $version = $this::arrGet($alexaRequest, 'version');
@@ -184,7 +184,8 @@ class FrontController implements FrontControllerInterface
     /**
      * Throw exception if things look like a replay attach is going on.
      */
-    private function checkIfReplayAttack($lastRequestTimestamp, $currentRequestTimestamp) {
+    private function checkIfReplayAttack($lastRequestTimestamp, $currentRequestTimestamp)
+    {
         if ($lastRequestTimestamp === null || $currentRequestTimestamp === null) {
             // We don't have sufficient data to detect a replay attack.
             return;
@@ -197,7 +198,8 @@ class FrontController implements FrontControllerInterface
     /**
      * Return value of array index, or default value/throw exception if not set.
      */
-    private static function arrGet($array, $index, $default = null) {
+    private static function arrGet($array, $index, $default = null)
+    {
         if (isset($array[$index])) {
             return $array[$index];
         } else {

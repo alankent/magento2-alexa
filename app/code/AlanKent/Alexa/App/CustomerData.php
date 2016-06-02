@@ -28,7 +28,8 @@ class CustomerData implements CustomerDataInterface
      * @param string $userId
      * @param string $acccessToken
      */
-    public function __construct($userId, $acccessToken) {
+    public function __construct($userId, $acccessToken) 
+    {
         $this->userId = $userId;
         $this->accessToken = $acccessToken;
         $this->localAttributes = array();
