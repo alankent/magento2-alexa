@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "magento/product-community-edition": "2.0.5",
+        "magento/product-community-edition": "2.1.0-rc1",
         "composer/composer": "@alpha"
     },
     "require-dev": {
