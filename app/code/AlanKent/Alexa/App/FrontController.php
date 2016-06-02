@@ -81,6 +81,7 @@ class FrontController implements FrontControllerInterface
             // Serialize the result.
             /** @var \Magento\Framework\Controller\Result\Json $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+            $result->setHttpResponseCode(200);
             $result->setData($alexaResponse);
 
             return $result;
@@ -105,22 +106,24 @@ class FrontController implements FrontControllerInterface
 
         // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
 
-        if ($alexaRequest['version'] != '1.0') {
-            throw new \Exception("Only version '1.0' is supported, not {$alexaRequest['version']}.");
+        $version = $this::arrGet($alexaRequest, 'version');
+        if ($version != '1.0') {
+            throw new \Exception("Only version '1.0' is supported, not '$version.");
         }
 
         // Process session data.
-        $session = $alexaRequest['session'];
-        $newSession = $session['new'];
-        $sessionId = $session['sessionId'];
-        $userId = $session['user']['userId'];
-        $accessToken = isset($session['user']['accessToken']) ? $session['user']['accessToken'] : null;
+        $session = $this::arrGet($alexaRequest, 'session');
+        $newSession = $this::arrGet($session, 'new');
+        $sessionId = $this::arrGet($session, 'sessionId');
+        $user = $this::arrGet($session, 'user');
+        $userId = $this::arrGet($user, 'userId');
+        $accessToken = isset($user['accessToken']) ? $user['accessToken'] : null;
 
         // Requests have different formats, but always have these fields.
-        $request = $alexaRequest['request'];
-        $requestType = $request['type'];
-        $requestId = $request['requestId'];
-        $timestamp = $request['timestamp'];
+        $request = $this::arrGet($alexaRequest, 'request');
+        $requestType = $this::arrGet($request, 'type');
+        $requestId = $this::arrGet($request, 'requestId');
+        $timestamp = $this::arrGet($request, 'timestamp');
 
         /** @var SessionDataInterface $sessionData */
         if ($newSession) {
@@ -143,22 +146,23 @@ class FrontController implements FrontControllerInterface
                 break;
             }
             case "IntentRequest" : {
-                $intentName = $request['intent'];
+                $intent = $this::arrGet($request, 'intent');
+                $intentName = $this::arrGet($intent, 'name');
                 $slots = array();
-                foreach ($request['intent']['slots'] as $nameAndValue) {
-                    $slots[$nameAndValue['name']] = $nameAndValue['value'];
+                foreach ($this::arrGet($intent, 'slots') as $nameAndValue) {
+                    $slots[$this::arrGet($nameAndValue, 'name')] = $this::arrGet($nameAndValue, 'value');
                 }
                 $responseData = $this->handler->intentRequest($sessionData, $customerData, $intentName, $slots);
                 break;
             }
             case "SessionEndedRequest" : {
-                $reason = $request['reason'];
+                $reason = $this::arrGet($request, 'reason');
                 $responseData = $this->handler->endSession($sessionData, $customerData, $reason);
-                $sessionData->setShouldEndSession(true);
+                $responseData->setShouldEndSession(true);
                 break;
             }
             default: {
-                throw new \Exception("Unknown Alexa request type '{$request['type']}'.");
+                throw new \Exception("Unknown Alexa request type '$requestType'.");
             }
         }
 
@@ -168,12 +172,7 @@ class FrontController implements FrontControllerInterface
         if ($attributes != null && !empty($attributes)) {
             $alexaResponse['sessionAttributes'] = $attributes;
         }
-        $response = array();
-        $alexaResponse['response'] = $response;
-        $response['shouldEndSession'] = $sessionData->getShouldEndSession();
-        //$response['outputSpeech'] = TODO
-        //$response['card'] = TODO
-        //$response['reprompt']['outputSpeech'] = TODO
+        $alexaResponse['response'] = $responseData->toJson();
 
         // Save away any data we wish to preserve in a Magento table.
         $this->stateManagement->saveSessionUpdates($sessionData, $timestamp);
@@ -192,6 +191,21 @@ class FrontController implements FrontControllerInterface
         }
         if ($currentRequestTimestamp < $lastRequestTimestamp) {
             throw new \Exception("New request timestamp '$currentRequestTimestamp'' is earlier than previous request timestamp '$lastRequestTimestamp''.");
+        }
+    }
+
+    /**
+     * Return value of array index, or default value/throw exception if not set.
+     */
+    private static function arrGet($array, $index, $default = null) {
+        if (isset($array[$index])) {
+            return $array[$index];
+        } else {
+            if ($default === null) {
+                throw new \Exception("Malformed Alexa JSON request: missing property '$index'.");
+            } else {
+                return $default;
+            }
         }
     }
 }
