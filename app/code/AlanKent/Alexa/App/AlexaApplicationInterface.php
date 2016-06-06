@@ -17,7 +17,8 @@ interface AlexaApplicationInterface
      * persisted between requests.
      * @return ResponseData The response to return to the Alex (to be vocalized).
      */
-    public function launchRequest($sessionData, $customerData);
+    public function launchRequest(SessionDataInterface $sessionData,
+                                  CustomerDataInterface $customerData);
 
     /**
      * Process the specified intent (request) from a user. This is the heart of request
@@ -35,7 +36,10 @@ interface AlexaApplicationInterface
      * so the caller should check whether expected slot values have been provided or not.
      * @return ResponseData The response to return to the Alex (to be vocalized).
      */
-    public function intentRequest($sessionData, $customerData, $intentName, $slots);
+    public function intentRequest(SessionDataInterface $sessionData,
+                                  CustomerDataInterface $customerData,
+                                  $intentName,
+                                  $slots);
 
     /**
      * Alexa has requested the specified session to be ended, for example because the user
@@ -50,5 +54,7 @@ interface AlexaApplicationInterface
      * that did not match any of the intents defined in your voice interface.
      * @return ResponseData The response to return to the Alex (to be vocalized).
      */
-    public function endSession($sessionData, $customerData, $reason);
+    public function endSession(SessionDataInterface $sessionData,
+                               CustomerDataInterface $customerData,
+                               $reason);
 }

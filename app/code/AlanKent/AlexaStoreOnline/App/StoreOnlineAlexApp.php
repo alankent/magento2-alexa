@@ -5,19 +5,40 @@ namespace AlanKent\AlexaStoreOnline\App;
 use AlanKent\Alexa\App\AlexaApplicationInterface;
 use AlanKent\Alexa\App\CustomerDataInterface;
 use AlanKent\Alexa\App\ResponseData;
+use AlanKent\Alexa\App\ResponseDataFactory;
 use AlanKent\Alexa\App\SessionDataInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Application to check if store is online.
  */
 class StoreOnlineAlexApp implements AlexaApplicationInterface
 {
+    /** @var ResponseDataFactory */
+    private $responseDataFactory;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /**
+     * StoreOnlineAlexApp constructor.
+     * @param ResponseDataFactory $responseDataFactory
+     */
+    public function __construct(
+        ResponseDataFactory $responseDataFactory,
+        OrderRepositoryInterface $orderRepository
+    ) {
+        $this->responseDataFactory = $responseDataFactory;
+        $this->orderRepository = $orderRepository;
+    }
+
     /**
      * @inheritdoc
      */
-    public function launchRequest($sessionData, $customerData)
+    public function launchRequest(SessionDataInterface $sessionData,
+                                  CustomerDataInterface $customerData)
     {
-        $response = new ResponseData();
+        $response = $this->responseDataFactory->create();
         $response->setShouldEndSession(true);
         return $response;
     }
@@ -25,11 +46,20 @@ class StoreOnlineAlexApp implements AlexaApplicationInterface
     /**
      * @inheritdoc
      */
-    public function intentRequest($sessionData, $customerData, $intentName, $slots)
+    public function intentRequest(SessionDataInterface $sessionData,
+                                  CustomerDataInterface $customerData,
+                                  $intentName,
+                                  $slots)
     {
-        $response = new ResponseData();
-        $response->setResponseText("Your store is online. At least I think it is online!");
-        $response->setCardSimple("Store Status", "Your store is probably online.");
+        $response = $this->responseDataFactory->create();
+
+        if ($intentName == 'ReportOrderCount') {
+            $search = new \Magento\Framework\Api\SearchCriteria();
+            $orders = $this->orderRepository->getList($search);
+            $numOrders = $orders->getTotalCount();
+            $response->setResponseText("Your have $numOrders orders.");
+            $response->setCardSimple("Store Status", "You currently have $numOrders orders.");
+        }
         $response->setShouldEndSession(true);
         return $response;
     }
@@ -37,9 +67,11 @@ class StoreOnlineAlexApp implements AlexaApplicationInterface
     /**
      * @inheritdoc
      */
-    public function endSession($sessionData, $customerData, $reason)
+    public function endSession(SessionDataInterface $sessionData,
+                               CustomerDataInterface $customerData,
+                               $reason)
     {
-        $response = new ResponseData();
+        $response = $this->responseDataFactory->create();
         $response->setShouldEndSession(true);
         return $response;
     }

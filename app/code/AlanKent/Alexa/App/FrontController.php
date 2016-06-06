@@ -151,8 +151,10 @@ class FrontController implements FrontControllerInterface
                 $intent = $this::arrGet($request, 'intent');
                 $intentName = $this::arrGet($intent, 'name');
                 $slots = array();
-                foreach ($this::arrGet($intent, 'slots') as $nameAndValue) {
-                    $slots[$this::arrGet($nameAndValue, 'name')] = $this::arrGet($nameAndValue, 'value');
+                if (isset($intent['slots'])) {
+                    foreach ($intent['slots'] as $nameAndValue) {
+                        $slots[$this::arrGet($nameAndValue, 'name')] = $this::arrGet($nameAndValue, 'value');
+                    }
                 }
                 $responseData = $this->handler->intentRequest($sessionData, $customerData, $intentName, $slots);
                 break;
