@@ -49,8 +49,9 @@ class FrontController implements FrontControllerInterface
     }
 
     /**
-     * @param RequestInterface $request
-     * @return ResultInterface
+     * Process a HTTP request.
+     * @param RequestInterface $request The HTTP request, including POST data.
+     * @return ResultInterface The formed response.
      */
     public function dispatch(RequestInterface $request)
     {
@@ -82,16 +83,17 @@ class FrontController implements FrontControllerInterface
             /** @var \Magento\Framework\Controller\Result\Json $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
             $result->setHttpResponseCode(200);
+            $result->setHeader('Content-Type', 'application/json', true);
             $result->setData($alexaResponse);
-
             return $result;
 
         } catch (\Exception $e) {
 
             /** @var \Magento\Framework\Controller\Result\Raw $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_RAW);
+            $result->setHttpResponseCode($e->getCode() >= 200 ? $e->getCode() : 500);
+            $result->setHeader('Content-Type', 'text/plain', true);
             $result->setContents($e->getMessage());
-            $result->setHttpResponseCode($e->getCode() == 0 ? 500 : $e->getCode());
             return $result;
         }
     }

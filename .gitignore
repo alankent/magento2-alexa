@@ -28,8 +28,13 @@ atlassian*
 /CONTRIBUTOR_LICENSE_AGREEMENT.html
 /COPYING.txt
 /Gruntfile.js
+/Gruntfile.js.sample
+/README_EE.md
 /LICENSE.txt
+/LICENSE_EE.txt
 /LICENSE_AFL.txt
+/ISSUE_TEMPLATE.md
 /nginx.conf.sample
 /package.json
+/package.json.sample
 /php.ini.sample

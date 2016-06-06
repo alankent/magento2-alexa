@@ -23,16 +23,17 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder '.', '/vagrant',
     type: 'rsync',
     rsync__exclude: [
-      'Vagrantfile',
-      '.vagrant/',
-      '.git/',
-      '.gitignore',
-      '.gitattributes',
-      'var/',     
-      'scripts/',     
-      'vendor/',  
-      '.idea/',
-      'app/etc/env.php' # Don't want to overwrite DB settings
+      'Vagrantfile',     # Vagrant control file
+      '.vagrant/',       # Vagrant work area
+      '.git/',           # Git repository
+      '.gitignore',      # Git support file
+      '.gitattributes',  # Git support file
+      'var/',            # Temporary files used by Magento
+      'scripts/',        # Support shell scripts
+      'vendor/',         # Compose download area
+      '.idea/',          # PHP Storm project files
+      'app/etc/env.php', # Don't want to overwrite DB settings
+      '.magento'         # Used by Magento Cloud
     ],
     rsync__auto: true
 

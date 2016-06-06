@@ -51,17 +51,21 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        // Need get methods so can access contents and response code from unit test.
         $this->rawContent = new class extends \Magento\Framework\Controller\Result\Raw {
             public function getContents() { return $this->contents; }
             public function getHttpResponseCode() { return $this->httpResponseCode; }
         };
 
+        // Need get methods so can access contents and response code from unit test.
         $this->jsonContent = new class extends \Magento\Framework\Controller\Result\Json {
             public function __construct() { }
             public function getContents() { return $this->json; }
             public function getHttpResponseCode() { return $this->httpResponseCode; }
         };
 
+        // 'Create' methods for raw and json should return the above two objects
+        // so we can access the result later.
         $this->resultFactory = $this->getMockBuilder('\Magento\Framework\Controller\ResultFactory')
             ->disableOriginalConstructor()
             ->getMock();
@@ -77,6 +81,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
+        // Always return the 'alexa' area.
         $this->areaList = $this->getMockBuilder('\Magento\Framework\App\AreaList')
             ->disableOriginalConstructor()
             ->getMock();
@@ -84,6 +89,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getFrontName')
             ->will($this->returnValue('alexa'));
 
+        // Always return the 'alexa' area.
         $this->configScope = $this->getMockBuilder('\Magento\Framework\Config\ScopeInterface')
             ->disableOriginalConstructor()
             ->getMock();
@@ -91,12 +97,16 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getConfigScope')
             ->will($this->returnValue('alexa'));
 
+        // Use the real data structures - they just hold simple data structures.
+        // This way we can check the values in the test methods.
         $this->sessionDataFactory = new SessionDataFactory();
         $this->customerDataFactory = new CustomerDataFactory();
         $this->stateManagement = new StateManagement($this->sessionDataFactory, $this->customerDataFactory);
 
+        // Test cases can mock this out more fully if required.
         $this->alexaApp = $this->getMock('\AlanKent\Alexa\App\AlexaApplicationInterface');
 
+        // Build a front controller, pointing to all of the above.
         $this->frontController = new FrontController($this->resultFactory, $this->areaList, $this->configScope, $this->alexaApp, $this->stateManagement);
     }
 
@@ -113,6 +123,7 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadUrl()
     {
+        // Return a POST to /alexa/blah (not the correct path of /alexa/v1.0).
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
@@ -126,10 +137,11 @@ class FrontControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Make sure valid URL with invalid version number is rejected.
+     * Make sure wrong method is rejected.
      */
     public function testNotPost()
     {
+        // Return a GET of /alexa/v1.0 (not a POST). Should fail.
         $request = $this->getMockBuilder('\Magento\Framework\App\Request\Http')
             ->disableOriginalConstructor()
             ->getMock();
