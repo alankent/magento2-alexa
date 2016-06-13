@@ -1,4 +1,30 @@
-curl -v -H "Content-Type: application/json" -d '{
+<?php
+
+
+function sendJson($json) {
+
+    $postUrl = 'http://192.168.33.33/alexa/v1.0';
+
+    $curl = curl_init($postUrl);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+    //curl_setopt($curl, CURLOPT_TIMEOUT, 2);
+
+    $response = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    curl_close($curl);
+
+    echo '> ' . preg_replace('/\n */', '', $json) . "\n";
+    echo "< $status $response\n\n";
+}
+
+
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":true,
@@ -15,9 +41,12 @@ curl -v -H "Content-Type: application/json" -d '{
     "requestId": "R0",
     "timestamp": "2015-05-13T12:34:00Z"
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -37,9 +66,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "ReportOrderCount"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":true,
@@ -59,9 +91,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "FindNextOrder"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -81,9 +116,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "FirstOrderItem"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -103,9 +141,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "NextOrderItem"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -125,9 +166,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "NextOrderItem"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -147,9 +191,12 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "NextOrderItem"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-curl -v -H "Content-Type: application/json" -d '{
+sendJson(<<<EOF
+{
   "version":"1.0",
   "session":{
     "new":false,
@@ -169,34 +216,7 @@ curl -v -H "Content-Type: application/json" -d '{
       "name": "MarkOrderAsDone"
     }
   }
-}' http://192.168.33.33/alexa/v1.0
+}
+EOF
+);
 
-exit 0
-
-curl -v -H "Content-Type: application/json" -d '{
-  "version":"1.0",
-  "session":{
-    "new":true,
-    "sessionId":"S1",
-    "application":{
-      "applicationId":"1234"
-    },
-    "user":{
-      "userId":"AlanKent"
-    }
-  },
-  "request":{
-    "type": "IntentRequest",
-    "requestId": "R1",
-    "timestamp": "2015-05-13T12:34:56Z",
-    "intent": {
-      "name": "CheckStoreStatus",
-      "slots": {
-        "foo": {
-          "name": "foo",
-          "value": "foo-value"
-	}
-      }
-    }
-  }
-}' http://192.168.33.33/alexa/v1.0

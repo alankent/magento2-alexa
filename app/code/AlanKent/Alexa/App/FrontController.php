@@ -170,6 +170,10 @@ class FrontController implements FrontControllerInterface
             }
         }
 
+        if ($responseData == null) {
+            throw new \Exception("Server error. Internal Alexa response is 'null'.");
+        }
+
         $alexaResponse = array();
         $alexaResponse['version'] = "1.0";
         $attributes = $sessionData->getSessionAttributes();

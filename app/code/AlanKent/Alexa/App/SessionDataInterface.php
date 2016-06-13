@@ -41,7 +41,7 @@ interface SessionDataInterface
      * and then sent back in the response (similar to cookies in HTTP). They are not persisted 
      * locally in Magento.
      * @return array Returns an associative array which can be modified by the caller. The array
-     * is serialized to/from JSON. If not session attributes have been set, an empty array is
+     * is serialized to/from JSON. If no session attributes have been set, an empty array is
      * returned.
      */
     public function getSessionAttributes();
