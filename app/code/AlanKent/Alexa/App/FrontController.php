@@ -88,7 +88,7 @@ class FrontController implements FrontControllerInterface
             return $result;
 
         } catch (\Exception $e) {
-
+var_dump($e);
             /** @var \Magento\Framework\Controller\Result\Raw $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_RAW);
             $result->setHttpResponseCode($e->getCode() >= 200 ? $e->getCode() : 500);

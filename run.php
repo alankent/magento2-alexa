@@ -1,7 +1,7 @@
 <?php
 
 
-function sendJson($json) {
+function sendJson($title, $json) {
 
     $postUrl = 'http://192.168.33.33/alexa/v1.0';
 
@@ -18,12 +18,13 @@ function sendJson($json) {
 
     curl_close($curl);
 
+    echo "==== $title ====\n";
     echo '> ' . preg_replace('/\n */', '', $json) . "\n";
     echo "< $status $response\n\n";
 }
 
 
-sendJson(<<<EOF
+sendJson("Launch request", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -45,7 +46,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Report order count", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -70,7 +71,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Find next order", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -95,7 +96,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("First order item", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -103,6 +104,10 @@ sendJson(<<<EOF
     "sessionId":"S2",
     "application":{
       "applicationId":"1234"
+    },
+    "attributes":{
+      "orderId":"1",
+      "itemIndex":"1"
     },
     "user":{
       "userId":"AlanKent"
@@ -120,7 +125,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Next order item (item 2)", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -128,6 +133,10 @@ sendJson(<<<EOF
     "sessionId":"S2",
     "application":{
       "applicationId":"1234"
+    },
+    "attributes":{
+      "orderId":"1",
+      "itemIndex":"2"
     },
     "user":{
       "userId":"AlanKent"
@@ -145,7 +154,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Next order item (item 3)", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -153,6 +162,10 @@ sendJson(<<<EOF
     "sessionId":"S2",
     "application":{
       "applicationId":"1234"
+    },
+    "attributes":{
+      "orderId":"1",
+      "itemIndex":"3"
     },
     "user":{
       "userId":"AlanKent"
@@ -170,7 +183,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Next order item (item 4)", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -178,6 +191,10 @@ sendJson(<<<EOF
     "sessionId":"S2",
     "application":{
       "applicationId":"1234"
+    },
+    "attributes":{
+      "orderId":"1",
+      "itemIndex":"4"
     },
     "user":{
       "userId":"AlanKent"
@@ -195,7 +212,7 @@ sendJson(<<<EOF
 EOF
 );
 
-sendJson(<<<EOF
+sendJson("Mark order done", <<<EOF
 {
   "version":"1.0",
   "session":{
@@ -203,6 +220,10 @@ sendJson(<<<EOF
     "sessionId":"S2",
     "application":{
       "applicationId":"1234"
+    },
+    "attributes":{
+      "orderId":"1",
+      "itemIndex":"5"
     },
     "user":{
       "userId":"AlanKent"

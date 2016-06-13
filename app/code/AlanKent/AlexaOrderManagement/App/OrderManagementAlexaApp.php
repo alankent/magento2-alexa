@@ -133,13 +133,20 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         if ($numOrders == 0) {
             $response->setResponseText("There are no orders ready for picking.");
         } else {
-            $order = $orders->getItems()[0]; // TODO: Why is there no getItem(index)?
+            $order = $orders->getItems()[1]; // TODO: Why is there no getItem(index)?
             $orderId = $order->getEntityId();
             $numOrderItems = $order->getTotalItemCount();
-            $response->setResponseText("The next order is $orderId and contains $numOrderItems items to pick.");
-            $response->setCardSimple("The next order is $orderId and contains $numOrderItems items to pick.");
-            $sessionData['orderId'] = (string)$orderId;
-            $sessionData['itemIndex'] = (string)0;
+            $itemsText = $numOrderItems == 1 ? "1 item" : "$numOrderItems items";
+            $response->setResponseText("The next order is order $orderId and contains $itemsText to pick.");
+            $response->setCardSimple("Order $orderId", "The next order is order $orderId and contains $itemsText to pick.");
+
+            $attributes = $sessionData->getSessionAttributes();
+            if ($attributes == null) {
+                $attributes = [];
+            }
+            $attributes['orderId'] = (string)$orderId;
+            $attributes['itemIndex'] = (string)1;
+            $sessionData->setSessionAttributes($attributes);
         }
         return $response;
     }
@@ -173,21 +180,23 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         $order = $this->orderRepository->get($orderId);
         $numOrderItems = $order->getTotalItemCount();
 
-        if ($itemIndex >= $numOrderItems) {
+        if ($itemIndex > $numOrderItems) {
             $response->setResponseText("There are no more items in order $orderId.");
             $response->setShouldEndSession(false);
             return $response;
         }
 
         $orderItem = $order->getItems()[$itemIndex]; // TODO: I expected getItem(idx)
+        $itemIndexText = (string)$itemIndex;
         $itemIndex++;
         $attributes['itemIndex'] = (string)$itemIndex;
 
-        $description = $orderItem->getDescription();
+        $name = $orderItem->getName();
         $sku = $orderItem->getSku();
-        $qty = $orderItem->getQtyOrdered();
+        $qty = floatval($orderItem->getQtyOrdered());
+        $qtyText = ($qty == 1) ? "" : "$qty of";
 
-        $response->setResponseText("Item $itemIndex of $numOrderItems. $qty of SKU $sku, $description.");
+        $response->setResponseText("Item $itemIndexText of $numOrderItems. $qtyText SKU $sku, $name.");
         $response->setShouldEndSession(false);
         return $response;
     }
@@ -211,7 +220,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
 
         /** @var OrderInterface $order */
         $order->setStatus('Complete');
-        $this->orderRepository->save($order);
+//        $this->orderRepository->save($order); TODO: TURNED OFF FOR TESTING
 
         unset($attributes['orderId']);
         unset($attributes['itemIndex']);
