@@ -153,7 +153,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
             $response->setResponseText("There are no orders ready for picking.");
             $response->setShouldEndSession(true);
         } else {
-            $order = array_values($orders->getItems())[0]; // TODO: Why is there no getItem(index)?
+            $order = array_values($orders->getItems())[0];
             $orderId = $order->getEntityId();
             $numOrderItems = $order->getTotalItemCount();
             $itemsText = $this->pluralize($numOrderItems, "item", "items");
@@ -206,7 +206,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
             return $response;
         }
 
-        $orderItem = array_values($order->getItems())[$itemIndex]; // TODO: I expected getItem(idx)
+        $orderItem = array_values($order->getItems())[$itemIndex];
         $itemIndex++;
         $attributes['itemIndex'] = (string)$itemIndex;
 
