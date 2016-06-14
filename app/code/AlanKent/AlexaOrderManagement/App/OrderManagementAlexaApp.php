@@ -71,6 +71,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         if ($intentName == 'FirstOrderItem') {
             $attributes = $sessionData->getSessionAttributes();
             $attributes['itemIndex'] = (string)0;
+            $sessionData->setSessionAttributes($attributes);
             return $this->nextOrderItem($sessionData);
         }
 
@@ -107,11 +108,29 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
     private function reportOrderCount()
     {
         $response = $this->responseDataFactory->create();
-        $search = $this->searchCriteriaBuilder->create();
-        $orders = $this->orderRepository->getList($search);
-        $numOrders = $orders->getTotalCount();
-        $response->setResponseText("You have $numOrders orders.");
-        $response->setCardSimple("Store Status", "You currently have $numOrders orders.");
+
+        $searchAll = $this->searchCriteriaBuilder->create();
+        $allOrders = $this->orderRepository->getList($searchAll);
+        $numOrders = $allOrders->getTotalCount();
+
+        $searchPending = $this->searchCriteriaBuilder
+            ->addFilter(OrderInterface::STATUS, 'Pending')
+            ->create();
+        $pendingOrders = $this->orderRepository->getList($searchPending);
+
+        $text = "You have " . $this->pluralize($numOrders, "order", "orders") . ".";
+
+        if ($numOrders > 0) {
+            $numPendingOrders = $pendingOrders->getTotalCount();
+            if ($numOrders == $numPendingOrders) {
+                $text .= " All orders are pending.";
+            } else {
+                $text .= " " . $this->pluralize($numPendingOrders, "is", "are") . " pending.";
+            }
+        }
+
+        $response->setResponseText($text);
+        $response->setCardSimple("Store Status", $text);
         $response->setShouldEndSession(true);
         return $response;
     }
@@ -132,11 +151,12 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         $numOrders = $orders->getTotalCount();
         if ($numOrders == 0) {
             $response->setResponseText("There are no orders ready for picking.");
+            $response->setShouldEndSession(true);
         } else {
-            $order = $orders->getItems()[1]; // TODO: Why is there no getItem(index)?
+            $order = array_values($orders->getItems())[0]; // TODO: Why is there no getItem(index)?
             $orderId = $order->getEntityId();
             $numOrderItems = $order->getTotalItemCount();
-            $itemsText = $numOrderItems == 1 ? "1 item" : "$numOrderItems items";
+            $itemsText = $this->pluralize($numOrderItems, "item", "items");
             $response->setResponseText("The next order is order $orderId and contains $itemsText to pick.");
             $response->setCardSimple("Order $orderId", "The next order is order $orderId and contains $itemsText to pick.");
 
@@ -145,8 +165,9 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
                 $attributes = [];
             }
             $attributes['orderId'] = (string)$orderId;
-            $attributes['itemIndex'] = (string)1;
+            $attributes['itemIndex'] = (string)0;
             $sessionData->setSessionAttributes($attributes);
+            $response->setShouldEndSession(false);
         }
         return $response;
     }
@@ -162,7 +183,6 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         $attributes = $sessionData->getSessionAttributes();
         if ($attributes == null) {
             $attributes = [];
-            $sessionData->setSessionAttributes($attributes);
         }
         if (!isset($attributes['orderId'])) {
             // orderId should *always* be set, but if not, redirect caller to start of flow.
@@ -180,24 +200,24 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
         $order = $this->orderRepository->get($orderId);
         $numOrderItems = $order->getTotalItemCount();
 
-        if ($itemIndex > $numOrderItems) {
+        if ($itemIndex >= $numOrderItems) {
             $response->setResponseText("There are no more items in order $orderId.");
             $response->setShouldEndSession(false);
             return $response;
         }
 
-        $orderItem = $order->getItems()[$itemIndex]; // TODO: I expected getItem(idx)
-        $itemIndexText = (string)$itemIndex;
+        $orderItem = array_values($order->getItems())[$itemIndex]; // TODO: I expected getItem(idx)
         $itemIndex++;
         $attributes['itemIndex'] = (string)$itemIndex;
 
         $name = $orderItem->getName();
         $sku = $orderItem->getSku();
         $qty = floatval($orderItem->getQtyOrdered());
-        $qtyText = ($qty == 1) ? "" : "$qty of";
+        $qtyText = ($qty == 1) ? "" : "Quantity $qty of";
 
-        $response->setResponseText("Item $itemIndexText of $numOrderItems. $qtyText SKU $sku, $name.");
+        $response->setResponseText("Item $itemIndex of $numOrderItems. $qtyText SKU $sku, $name.");
         $response->setShouldEndSession(false);
+        $sessionData->setSessionAttributes($attributes);
         return $response;
     }
 
@@ -220,13 +240,23 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
 
         /** @var OrderInterface $order */
         $order->setStatus('Complete');
-//        $this->orderRepository->save($order); TODO: TURNED OFF FOR TESTING
+        $this->orderRepository->save($order);
 
-        unset($attributes['orderId']);
-        unset($attributes['itemIndex']);
-
+        $response->setResponseText("Order $orderId has been moved from the 'pending' to 'completed' state.");
         $response->setShouldEndSession(true);
         return $response;
     }
 
+    /**
+     * Return the number as a string, followed by the singular or plural word. For example,
+     * "1 item" vs "2 items".
+     * @param int $n The number.
+     * @param string $singular The suffix to add if the number is 1.
+     * @param string $plural The suffix to add if the number is not 1. 
+     * @return string The plurized text of the form "1 item", "2 items", etc.
+     */
+    private function pluralize($n, $singular, $plural)
+    {
+        return ((string)$n) . " " . ($n == 1) ? $singular : $plural;
+    }
 }
