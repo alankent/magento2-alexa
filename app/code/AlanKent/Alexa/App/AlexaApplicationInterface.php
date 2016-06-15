@@ -3,7 +3,8 @@
 namespace AlanKent\Alexa\App;
 
 /**
- * Implementation of a handler to process Alexa requests.
+ * Definition of an application to process Alexa requests. The rest of the module translates
+ * JSON HTTP POST requests from Amazon into these function calls.
  */
 interface AlexaApplicationInterface
 {
@@ -12,7 +13,7 @@ interface AlexaApplicationInterface
      * For example, the user has said something like "Alexa, connect to My Magento Store".
      * @param SessionDataInterface $sessionData Data structure for holding session data that is
      * persisted between requests. This data structure is deleted when the user's session
-     * expires.
+     * expires. Can be used to hold session state (such as current item in a list).
      * @param CustomerDataInterface $customerData Data structure for holding customer data this is
      * persisted between requests.
      * @return ResponseData The response to return to the Alex (to be vocalized).

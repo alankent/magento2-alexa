@@ -11,7 +11,8 @@ class ResponseDataFactory
      * Create a new instance of a ResponseData instance.
      * @return ResponseData The newly created instance.
      */
-    public function create() {
+    public function create()
+    {
         return new ResponseData();
     }
 }

@@ -9,7 +9,7 @@
 namespace AlanKent\Alexa\App;
 
 /**
- * Manages Magento state information, store in a local databas table.
+ * Manages Magento state information, store in a local database table.
  * Note that preserving state is optional between requests. The default behavior is to
  * not persist state in a database table.
  */

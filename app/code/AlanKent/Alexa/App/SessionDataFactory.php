@@ -9,6 +9,9 @@
 namespace AlanKent\Alexa\App;
 
 
+/**
+ * Factory to create default SessionDataInterface instances.
+ */
 class SessionDataFactory implements SessionDataFactoryInterface
 {
     /**

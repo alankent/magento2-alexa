@@ -23,7 +23,7 @@ interface CustomerDataInterface
 
     /**
      * Return the access token if Alexa authenticated the user by an external authenciation source
-     * (as defined by Alex application configuration settings).
+     * (as defined by Alexa application configuration settings).
      * @return string|null Returns access token, if provided by Alexa.
      */
     public function getAccessToken();

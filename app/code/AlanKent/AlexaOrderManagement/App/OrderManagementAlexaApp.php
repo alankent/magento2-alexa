@@ -13,7 +13,11 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
- * Application to provide various order management functionality.
+ * Sample application to provide various order management functionality.
+ * It allows you to ask for a 'Pending' order, iterate through the items
+ * in the order, then mark the order as complete.
+ * (See also the 'samples' directory for the Alexa configuration files that
+ * must be used to go along with this sample application.)
  */
 class OrderManagementAlexaApp implements AlexaApplicationInterface
 {

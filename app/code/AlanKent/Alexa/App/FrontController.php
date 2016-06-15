@@ -11,7 +11,8 @@ use Magento\Framework\HTTP\PhpEnvironment\Request as HttpRequest;
 
 /**
  * Front controller for the 'alexa' area. Converts web service requests
- * (HTTP POST of JSON encoded data) into appropriate PHP function calls.
+ * (HTTP POST of JSON encoded data) into appropriate PHP function calls
+ * defined in AlexaApplicationInterface.
  */
 class FrontController implements FrontControllerInterface
 {
@@ -49,7 +50,7 @@ class FrontController implements FrontControllerInterface
     }
 
     /**
-     * Process a HTTP request.
+     * Process a HTTP request holding an Alexa request.
      * @param RequestInterface $request The HTTP request, including POST data.
      * @return ResultInterface The formed response.
      */
@@ -88,7 +89,6 @@ class FrontController implements FrontControllerInterface
             return $result;
 
         } catch (\Exception $e) {
-var_dump($e);
             /** @var \Magento\Framework\Controller\Result\Raw $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_RAW);
             $result->setHttpResponseCode($e->getCode() >= 200 ? $e->getCode() : 500);
@@ -100,32 +100,32 @@ var_dump($e);
 
     /**
      * Process a request according to the Alexa protocol.
-     * @param array $alexaRequest Associatiate array that is the parsed JSON request.
+     * @param array $alexaRequest Associative array that is the parsed JSON request.
      * @return array Associative array to encode as JSON.
      * @throws \Exception Thrown if fail to parse message.
      */
     private function processV1AlexaRequest($alexaRequest)
     {
-        // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
+        // See also https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
 
-        $version = $this::arrGet($alexaRequest, 'version');
+        $version = self::jsonGet($alexaRequest, 'version');
         if ($version != '1.0') {
             throw new \Exception("Only version '1.0' is supported, not '$version.");
         }
 
         // Process session data.
-        $session = $this::arrGet($alexaRequest, 'session');
-        $newSession = $this::arrGet($session, 'new');
-        $sessionId = $this::arrGet($session, 'sessionId');
-        $user = $this::arrGet($session, 'user');
-        $userId = $this::arrGet($user, 'userId');
+        $session = self::jsonGet($alexaRequest, 'session');
+        $newSession = self::jsonGet($session, 'new');
+        $sessionId = self::jsonGet($session, 'sessionId');
+        $user = self::jsonGet($session, 'user');
+        $userId = self::jsonGet($user, 'userId');
         $accessToken = isset($user['accessToken']) ? $user['accessToken'] : null;
 
         // Requests have different formats, but always have these fields.
-        $request = $this::arrGet($alexaRequest, 'request');
-        $requestType = $this::arrGet($request, 'type');
-        $requestId = $this::arrGet($request, 'requestId');
-        $timestamp = $this::arrGet($request, 'timestamp');
+        $request = self::jsonGet($alexaRequest, 'request');
+        $requestType = self::jsonGet($request, 'type');
+        $requestId = self::jsonGet($request, 'requestId');
+        $timestamp = self::jsonGet($request, 'timestamp');
 
         /** @var SessionDataInterface $sessionData */
         if ($newSession) {
@@ -143,24 +143,24 @@ var_dump($e);
 
         // Process the request.
         switch ($requestType) {
-            case "LaunchRequest" : {
+            case 'LaunchRequest' : {
                 $responseData = $this->handler->launchRequest($sessionData, $customerData);
                 break;
             }
-            case "IntentRequest" : {
-                $intent = $this::arrGet($request, 'intent');
-                $intentName = $this::arrGet($intent, 'name');
+            case 'IntentRequest' : {
+                $intent = self::jsonGet($request, 'intent');
+                $intentName = self::jsonGet($intent, 'name');
                 $slots = array();
                 if (isset($intent['slots'])) {
                     foreach ($intent['slots'] as $nameAndValue) {
-                        $slots[$this::arrGet($nameAndValue, 'name')] = $this::arrGet($nameAndValue, 'value');
+                        $slots[self::jsonGet($nameAndValue, 'name')] = self::jsonGet($nameAndValue, 'value');
                     }
                 }
                 $responseData = $this->handler->intentRequest($sessionData, $customerData, $intentName, $slots);
                 break;
             }
-            case "SessionEndedRequest" : {
-                $reason = $this::arrGet($request, 'reason');
+            case 'SessionEndedRequest' : {
+                $reason = self::jsonGet($request, 'reason');
                 $responseData = $this->handler->endSession($sessionData, $customerData, $reason);
                 $responseData->setShouldEndSession(true);
                 break;
@@ -206,7 +206,7 @@ var_dump($e);
     /**
      * Return value of array index, or default value/throw exception if not set.
      */
-    private static function arrGet($array, $index, $default = null)
+    private static function jsonGet($array, $index, $default = null)
     {
         if (isset($array[$index])) {
             return $array[$index];

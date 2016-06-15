@@ -4,15 +4,19 @@ namespace AlanKent\Alexa\App;
 
 
 /**
- * Used to collect response for the Alexa to vocalize.
+ * Used to collect response for the Alexa. This includes what to vocalize as plain text
+ * or in "Speech Synthesis Markup Language" (SSML), what to display in the 'card' in the
+ * Alexa app (can include an image), and reprompting text if Alexa is waiting for a reply.
+ * See also https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
  */
 class ResponseData
 {
-    // See also https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference
-    // Output Speech (PlainText or SSML markup); CARD (complex); reprompt(output speech)
-
+    /** @var array JSON response encoded as associative array. */
     private $json;
 
+    /**
+     * ResponseData constructor.
+     */
     public function __construct()
     {
         $this->json = ['shouldEndSession'=>true];
@@ -28,7 +32,7 @@ class ResponseData
     }
 
     /**
-     * Set response text in "Speach Synthesis Markup Language" (SSML) to return.
+     * Set response text in "Speech Synthesis Markup Language" (SSML) to return.
      * This allows richer control over pronunciation of the returned text.
      * https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference
      * @param $ssml The marked up text.
@@ -57,8 +61,8 @@ class ResponseData
      * for information on supported image formats, dimensions, etc.
      * @param string $title The title to display at the top of the card.
      * @param string $text The text to display - use newline (\n) for line breaks.
-     * @param null $smallImageUrl Optional URL for a small image (recommended size is 720w x 480h).
-     * @param null $largeImageUrl Optional URL for a large image (recommended size is 1200w x 800h).
+     * @param string|null $smallImageUrl Optional URL for a small image (recommended size is 720w x 480h).
+     * @param string|null $largeImageUrl Optional URL for a large image (recommended size is 1200w x 800h).
      */
     public function setCardStandard($title, $text, $smallImageUrl = null, $largeImageUrl = null)
     {

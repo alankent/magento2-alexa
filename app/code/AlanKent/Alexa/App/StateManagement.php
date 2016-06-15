@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/2/2016
- * Time: 12:10 AM
- */
 
 namespace AlanKent\Alexa\App;
 
-
 /**
- * @inheritdoc
+ * Default state management implementation, which does not preserve any state.
+ * Other implementations can be provided to save state say in a database table.
  */
 class StateManagement implements StateManagementInterface
 {

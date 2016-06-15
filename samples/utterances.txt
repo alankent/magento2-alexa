@@ -1,9 +1,37 @@
+ReportOrderCount Report order count
+ReportOrderCount Order count
+
+FindNextOrder Find next order
+FindNextOrder Next order
+FindNextOrder Pick next order
+FindNextOrder Pick an order
+FindNextOrder Pick
+FindNextOrder Pack
+
+FirstOrderItem First order item
+FirstOrderItem First item
+FirstOrderItem Start picking
+FirstOrderItem Start pick
+FirstOrderItem Start packing
+FirstOrderItem Start pack
+FirstOrderItem Start
+FirstOrderItem First
+
+NextOrderItem Next order item
+NextOrderItem Next item
+NextOrderItem Next
+
+MarkOrderAsDone Mark order as done
+MarkOrderAsDone Mark as done
+MarkOrderAsDone Mark order as complete
+MarkOrderAsDone Mark order complete
+MarkOrderAsDone Done
+MarkOrderAsDone Complete
+MarkOrderAsDone Shipped
 
 
-CheckStoreOnline is my store online
-CheckStoreOnline are you online
-CheckStoreOnline status
-CheckStoreOnline current status
+
+
 
 CheckStockLevel how many {item} are in stock
 CheckStockLevel how many {color} {item} are in stock

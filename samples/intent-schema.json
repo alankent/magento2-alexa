@@ -2,6 +2,33 @@
   "intents": [
     {
       "intent": "ReportOrderCount"
+    },
+    {
+      "intent": "FindNextOrder"
+    },
+    {
+      "intent": "FirstOrderItem"
+    },
+    {
+      "intent": "NextOrderItem"
+    },
+    {
+      "intent": "MarkOrderAsDone"
+    },
+
+
+    {
+      "intent": "CheckStockLevel",
+      "slots": [
+        {
+          "name": "color",
+          "type": "COLOR"
+        },
+        {
+          "name": "item",
+          "type": "ITEM"
+        }
+      ]
     }
   ]
 }
