@@ -102,7 +102,7 @@ class FrontController implements FrontControllerInterface
      * Process a request according to the Alexa protocol.
      * @param array $alexaRequest Associative array that is the parsed JSON request.
      * @return array Associative array to encode as JSON.
-     * @throws \Exception Thrown if fail to parse message.
+     * @throws \Exception Thrown if fail to parse message. TODO: Should use a better exception class.
      */
     private function processV1AlexaRequest($alexaRequest)
     {
@@ -124,7 +124,6 @@ class FrontController implements FrontControllerInterface
         // Requests have different formats, but always have these fields.
         $request = self::jsonGet($alexaRequest, 'request');
         $requestType = self::jsonGet($request, 'type');
-        $requestId = self::jsonGet($request, 'requestId');
         $timestamp = self::jsonGet($request, 'timestamp');
 
         /** @var SessionDataInterface $sessionData */
@@ -191,6 +190,9 @@ class FrontController implements FrontControllerInterface
     
     /**
      * Throw exception if things look like a replay attach is going on.
+     * @param string $lastRequestTimestamp
+     * @param string $currentRequestTimestamp
+     * @throws \Exception TODO: Should use a better exception class.
      */
     private function checkIfReplayAttack($lastRequestTimestamp, $currentRequestTimestamp)
     {
@@ -205,6 +207,11 @@ class FrontController implements FrontControllerInterface
 
     /**
      * Return value of array index, or default value/throw exception if not set.
+     * @param array $array The array to extract value from (expected to be decoded JSON)
+     * @param string $index The JSON field name to access.
+     * @param string $default The value to return if the index is out of bounds for the array.
+     * @return array|string Returns the value at the specified index.
+     * @throws \Exception Exception thrown on error. TODO: Should use a better exception class.
      */
     private static function jsonGet($array, $index, $default = null)
     {

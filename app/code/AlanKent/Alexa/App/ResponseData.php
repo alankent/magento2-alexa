@@ -24,7 +24,7 @@ class ResponseData
 
     /**
      * Set simple (plain text) response text to return.
-     * @param $text The plain text for Alexa to read out.
+     * @param string $text The plain text for Alexa to read out.
      */
     public function setResponseText($text)
     {
@@ -35,7 +35,7 @@ class ResponseData
      * Set response text in "Speech Synthesis Markup Language" (SSML) to return.
      * This allows richer control over pronunciation of the returned text.
      * https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference
-     * @param $ssml The marked up text.
+     * @param string $ssml The marked up text.
      */
     public function setResponseSsml($ssml)
     {

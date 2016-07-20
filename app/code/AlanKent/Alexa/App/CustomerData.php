@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/2/2016
- * Time: 1:17 AM
- */
-
 namespace AlanKent\Alexa\App;
-
 
 /**
  * Default implementation of CustomerDataInterface.
@@ -26,12 +18,12 @@ class CustomerData implements CustomerDataInterface
     /**
      * CustomerData constructor.
      * @param string $userId
-     * @param string $acccessToken
+     * @param string $accessToken
      */
-    public function __construct($userId, $acccessToken) 
+    public function __construct($userId, $accessToken)
     {
         $this->userId = $userId;
-        $this->accessToken = $acccessToken;
+        $this->accessToken = $accessToken;
         $this->localAttributes = array();
     }
 

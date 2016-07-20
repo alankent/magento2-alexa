@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/2/2016
- * Time: 1:21 AM
- */
 
 namespace AlanKent\Alexa\App;
-
 
 /**
  * Factory for default class implementation of customer data.

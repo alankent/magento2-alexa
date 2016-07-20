@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/1/2016
- * Time: 10:29 PM
- */
 
 namespace AlanKent\Alexa\App;
-
 
 /**
  * Used to store customer specific data that should live longer than a session.
@@ -22,7 +15,7 @@ interface CustomerDataInterface
     public function getUserId();
 
     /**
-     * Return the access token if Alexa authenticated the user by an external authenciation source
+     * Return the access token if Alexa authenticated the user by an external authentication source
      * (as defined by Alexa application configuration settings).
      * @return string|null Returns access token, if provided by Alexa.
      */
@@ -38,7 +31,7 @@ interface CustomerDataInterface
 
     /**
      * Similar to session local attributes, but for customer data.
-     * (The default implemenation currently does not store these attributes.)
+     * (The default implementation currently does not store these attributes.)
      * @return array Returns an associative array which can be modified by the caller.
      */
     public function getLocalAttributes();

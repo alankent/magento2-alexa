@@ -29,6 +29,8 @@ Vagrant.configure(2) do |config|
       '.gitignore',      # Git support file
       '.gitattributes',  # Git support file
       'var/',            # Temporary files used by Magento
+      'pub/media/',      # Don't wipe uploaded media files pub/media
+      'pub/static/',     # Don't wipe generated assets under pub/static
       'scripts/',        # Support shell scripts
       'vendor/',         # Compose download area
       '.idea/',          # PHP Storm project files

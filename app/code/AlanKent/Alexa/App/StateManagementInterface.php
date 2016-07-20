@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/1/2016
- * Time: 11:14 PM
- */
 
 namespace AlanKent\Alexa\App;
 
@@ -25,8 +19,7 @@ interface StateManagementInterface
     /**
      * Return session data for existing session with specified session id.
      * Throws an \Exception is the session does not exist.
-     * @param string $sessionId Session identifer.
-     * @param string $timestamp ISO format timestamp.
+     * @param string $sessionId Session identifier.
      * @return SessionDataInterface Data structure holding session information.
      */
     public function retrieveSessionData($sessionId);

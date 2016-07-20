@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akent
- * Date: 6/1/2016
- * Time: 10:30 PM
- */
 
 namespace AlanKent\Alexa\App;
-
 
 /**
  * Session data holds information about the current session. An Alexa request may be a single
@@ -55,7 +48,7 @@ interface SessionDataInterface
 
     /**
      * Local attributes are similar to session attributes, but stored in a local database table.
-     * (The default implemenation currently does not store these attributes.)
+     * (The default implementation currently does not store these attributes.)
      * @return array Returns an associative array which can be modified by the caller.
      */
     public function getLocalAttributes();

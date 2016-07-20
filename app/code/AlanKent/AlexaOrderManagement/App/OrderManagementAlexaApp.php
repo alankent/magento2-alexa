@@ -6,10 +6,10 @@ use AlanKent\Alexa\App\AlexaApplicationInterface;
 use AlanKent\Alexa\App\CustomerDataInterface;
 use AlanKent\Alexa\App\ResponseData;
 use AlanKent\Alexa\App\ResponseDataFactory;
-use AlanKent\Alexa\App\SessionDataFactoryInterface;
 use AlanKent\Alexa\App\SessionDataInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
@@ -33,6 +33,8 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
     /**
      * Constructor.
      * @param ResponseDataFactory $responseDataFactory
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         ResponseDataFactory $responseDataFactory,
@@ -141,6 +143,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
 
     /**
      * Look for the next order to be processed.
+     * @param SessionDataInterface $sessionData
      * @return ResponseData
      */
     private function findNextOrder($sessionData)
@@ -157,6 +160,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
             $response->setResponseText("There are no orders ready for picking.");
             $response->setShouldEndSession(true);
         } else {
+            /** @var OrderInterface $order */
             $order = array_values($orders->getItems())[0];
             $orderId = $order->getEntityId();
             $numOrderItems = $order->getTotalItemCount();
@@ -178,6 +182,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
 
     /**
      * Look for the next order item to pick within current order.
+     * @param SessionDataInterface $sessionData
      * @return ResponseData
      */
     private function nextOrderItem(SessionDataInterface $sessionData)
@@ -210,6 +215,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
             return $response;
         }
 
+        /** @var OrderItemInterface $orderItem */
         $orderItem = array_values($order->getItems())[$itemIndex];
         $itemIndex++;
         $attributes['itemIndex'] = (string)$itemIndex;
@@ -257,7 +263,7 @@ class OrderManagementAlexaApp implements AlexaApplicationInterface
      * @param int $n The number.
      * @param string $singular The suffix to add if the number is 1.
      * @param string $plural The suffix to add if the number is not 1. 
-     * @return string The plurized text of the form "1 item", "2 items", etc.
+     * @return string The pluralized text of the form "1 item", "2 items", etc.
      */
     private function pluralize($n, $singular, $plural)
     {
